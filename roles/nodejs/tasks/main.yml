@@ -1,0 +1,21 @@
+---
+- name: include vars 
+  include_vars: vars/main.yml
+- name: Install nodejs
+  yum: name=nodejs state=present
+  become: yes
+- name: Install npm
+  yum: name=npm state=present
+  become: yes
+- name: Install nodejs-legacy (Something that is needed for the Ubuntu)
+  yum: name=nodejs-legacy state=present
+  become: yes
+- name: Install git
+  yum: name=git state=present
+  become: yes
+- name: Install bower
+  command: npm install -g  bower 
+  become: yes
+- name: Install forever
+  command: npm install -g forever
+  become: yes
