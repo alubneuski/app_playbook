@@ -7,9 +7,6 @@
 - name: Install npm
   yum: name=npm state=present
   become: yes
-- name: Install nodejs-legacy (Something that is needed for the Ubuntu)
-  yum: name=nodejs-legacy state=present
-  become: yes
 - name: Install git
   yum: name=git state=present
   become: yes
