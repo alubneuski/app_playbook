@@ -2,7 +2,7 @@
 - name: include vars 
   include_vars: vars/main.yml
 - name: Install nodejs
-  yum: name=nodejs state=present
+  command: yum install -y nodejs --enablerepo=epel
   become: yes
 - name: Install npm
   yum: name=npm state=present
