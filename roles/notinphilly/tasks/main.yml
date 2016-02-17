@@ -7,18 +7,23 @@
        version=master
 - name: Run bower install
   command: bower install
+  remote_user: ec2-user
   args:
    chdir: "{{ install_dir }}/{{ app_name }}"
 - name: Install npm dependencies
   command: npm install
+  remote_user: ec2-user
   args:
     chdir: "{{ install_dir }}/{{ app_name }}"
 - name: Check which apps are running
   command: forever list
   register: forever_list
+  remote_user: ec2-user
   changed_when: false 
+  ignore_errors: true
 - name: Start server
   command: forever start server.js
+  remote_user: ec2-user
   when: "forever_list.stdout.find('{{ install_dir }}/{{ app_name }}/server.js') == -1"
   args:
     chdir: "{{ install_dir }}/{{ app_name }}"
