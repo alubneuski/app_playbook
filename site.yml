@@ -1,9 +1,9 @@
 ---
-- hosts: localhost 
-  connection: local 
-  name: Install Nodejs 
-  roles:
-  - nodejs
+#- hosts: localhost 
+#  connection: local 
+#  name: Install Nodejs 
+#  roles:
+#  - nodejs
 
 - hosts: localhost 
   connection: local
