@@ -1,12 +1,8 @@
 ---
-#- hosts: localhost 
-#  connection: local 
-#  name: Install Nodejs 
-#  roles:
-#  - nodejs
-
-- hosts: localhost 
-  connection: local
-  name: Install App 
+- hosts: app_server 
+  pre_tasks:
+  - apt: update_cache=yes
+    become: yes
   roles: 
+  - nodejs
   - notinphilly

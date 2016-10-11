@@ -1,15 +1,19 @@
 ---
 - name: include vars 
   include_vars: vars/main.yml
-- name: Install nodejs
-  command: yum install -y nodejs npm --enablerepo=epel
+- apt: name=git state=present
   become: yes
-- name: Install git
-  yum: name=git state=present
+- name: Install nodejs
+  apt: name=nodejs state=present 
+  become: yes
+- apt: name=nodejs-legacy state=present
+  become: yes
+- name: Install npm
+  apt: name=npm state=present
   become: yes
 - name: Install bower
-  command: npm install -g  bower 
+  command: npm install bower -g
   become: yes
 - name: Install forever
-  command: npm install -g forever
+  command:  npm install forever -g
   become: yes
