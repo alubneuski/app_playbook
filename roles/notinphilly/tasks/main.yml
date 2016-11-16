@@ -2,13 +2,13 @@
 - name: Stop everything
   command: forever stopall
 - name: Remove directories
-  command: rm -rf ~/srv/notinphilly
+  file: path=~/srv/notinphilly state=absent
 - name: Include Variables
   include_vars: vars/main.yml
 - name: Create directory
-  file: path="./srv/{{ app_name }}" state=directory mode=0755
+  file: path="~/srv/{{ app_name }}" state=directory mode=0755
 - name: Get checkout code from Jenkins
-  synchronize: src=/var/lib/jenkins/workspace/notinphilly_app_deploy_dev/ dest=./srv/{{ app_name }}/
+  synchronize: src=/var/lib/jenkins/workspace/notinphilly_app_deploy_dev/ dest=~/srv/{{ app_name }}/
 - name: Run bower install
   command: bower install -f
   args:
@@ -22,20 +22,25 @@
   register: forever_list
   changed_when: false 
   ignore_errors: true
+- name: Verify that log folder exists
+  file: path=/var/log/nodejs state=directory mode=0755 owner=ubuntu
+  become: yes
 - name: Start server
-  command: forever start server.js
+  command: forever -o /var/log/nodejs/forever.log -e /var/log/nodejs/forever_error.log start server.js
   when: "forever_list.stdout.find('{{ install_dir }}/{{ app_name }}/server.js') == -1"
   args:
     chdir: "{{ install_dir }}/{{ app_name }}"
   environment:
-    AWS_MONGO_DB_URL: "mongodb://10.1.4.103/notinphilly"
-    OPENSHIFT_NODEJS_IP: "0.0.0.0"
-    EMAIL_API_KEY: "key-9c7663b6947df059523a2c1081483fbc"
-    EMAIL_DOMAIN: 'mail.notinphilly.org'
-    MAP_BOX_API_KEY: "pk.eyJ1IjoieXVyeWtvcnp1biIsImEiOiJjaXVsbHBnOTgwMDc4MnlwazkxYWhoNnY2In0.iU-SAfTXEZSsTEJK74wfeA"
-    MAP_BOX_MAP_ID: "yurykorzun.nljndeg0"
-    GOOGLE_API_KEY: "AIzaSyAUptjRjLzbBPVOUu2PxQhOLQ5DSNAPEX8"
-    SECRET_TOKEN: "notinphillynotinphilly"
-    HTTP_IP: "0.0.0.0"
-    HTTP_PORT: "8080"
-    DB_CONNECTION_STRING_: "mongodb://10.1.4.103/notinphilly"
+    AWS_MONGO_DB_URL: "{{ aws_mongo_db_url }}"
+    OPENSHIFT_NODEJS_IP: "{{ openshift_nodejs_ip  }}"
+    EMAIL_API_KEY: "{{ email_api_key  }}"
+    EMAIL_DOMAIN: "{{ email_domain }}" 
+    MAP_BOX_API_KEY: "{{ map_box_api_key }}"
+    MAP_BOX_MAP_ID: "{{ map_box_map_id }}"
+    GOOGLE_API_KEY: "{{ google_api_key }}"
+    SECRET_TOKEN: "{{ secret_token }}"
+    HTTP_IP: "{{ http_ip }}"
+    HTTP_PORT: "{{ http_port }}"
+    DB_CONNECTION_STRING: "{{ db_connection_string }}"
+- name: Please Follow this URL
+  debug: msg="{{ url_to_follow }}"

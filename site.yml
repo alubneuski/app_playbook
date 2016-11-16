@@ -1,9 +1,9 @@
 ---
-- hosts: app_server 
+- hosts: app_server
   remote_user: ubuntu
   pre_tasks:
   - apt: update_cache=yes
     become: yes
   roles: 
   - nodejs
-  - notinphilly
+  - { role: notinphilly, aws_mongo_db_url: "mongodb://{{ DB_SERVER }}/notinphilly", openshift_nodejs_ip: "0.0.0.0", email_api_key: "{{ EMAIL_API_KEY }}", email_domain: '{{ EMAIL_DOMAIN }}', map_box_api_key: "{{ MAP_BOX_API_KEY }}", map_box_map_id: "{{ MAP_BOX_MAP_ID }}", google_api_key: "{{ GOOGLE_API_KEY }}", secret_token: "{{ SECRET_TOKEN }}", http_ip: "{{ HTTP_IP }}", http_port: "{{ HTTP_PORT  }}", db_connection_string: "mongodb://{{ DB_SERVER }}/notinphilly", url_to_follow: "{{ public_elb_url }}" }
