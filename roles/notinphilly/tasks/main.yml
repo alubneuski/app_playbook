@@ -4,7 +4,7 @@
 - name: Include Variables
   include_vars: vars/main.yml
 - name: Get application from github
-  git: repo=https://github.com/yurykorzun/{{ app_name }}
+  git: repo="https://github.com/yurykorzun/{{ app_name }}"
        dest="{{ install_dir }}/{{ app_name }}"
        version=master
 - name: Run bower install
@@ -15,6 +15,14 @@
   command: npm install
   args:
     chdir: "{{ install_dir }}/{{ app_name }}"
+- name: Replace configuration files
+  template: 
+    src: roles/notinphilly/templates/apiSettings.js_.j2
+    dest: "{{ install_dir }}/server/config/apiSettings.js_"
+- name: Replace configuration files
+  template:
+    src: roles/notinphilly/templates/serverSettings.js_.j2
+    dest: "{{ install_dir }}/server/config/serverSettings.js_"
 - name: Check which apps are running
   command: forever list
   register: forever_list

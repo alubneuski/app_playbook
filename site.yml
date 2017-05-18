@@ -1,8 +1,22 @@
 ---
-- hosts: app_server 
+- hosts: localhost
+  gather_facts: yes 
   pre_tasks:
   - apt: update_cache=yes
     become: yes
+  tasks:
+  - name: Send notification message via Slack all options
+    slack:
+      token: "xoxp/9829409589/17630400722/90192379762/a739d5fcb915a8b7dfd675f1cdd7e01d"
+      domain: notinphilly.slack.com
+      msg: "{{ inventory_hostname }} completed"
+      channel: "#devops"
+      username: "alex.lubneuski"
+      icon_url: "https://cdn.meme.am/instances/35478200.jpg"
+      link_names: 0
+      parse: 'none'
+    tags: send_slack 
+    when: enable_slack == 'True'
   roles: 
   - nodejs
   - notinphilly
